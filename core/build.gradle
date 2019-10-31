@@ -38,28 +38,21 @@ dependencies {
 }
 
 
-def querydslSrcDir = 'src/main/generated'
-
+def querydslGenratedSrc = 'src/main/generated'
 querydsl {
     library = "com.querydsl:querydsl-apt"
     jpa = true
-    querydslSourcesDir = querydslSrcDir
+    querydslSourcesDir = querydslGenratedSrc
 }
-
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
-
 configurations {
     querydsl.extendsFrom compileClasspath
 }
-
 sourceSets {
-    main.java.srcDirs += [ querydslSrcDir ]
+    main.java.srcDirs += [ querydslGenratedSrc ]
 }
 tasks.withType(JavaCompile) {
-    options.annotationProcessorGeneratedSourcesDirectory = file(querydslSrcDir)
-}
-clean.doLast {
-    file(querydslSrcDir).deleteDir()
+    options.annotationProcessorGeneratedSourcesDirectory = file(querydslGenratedSrc)
 }
