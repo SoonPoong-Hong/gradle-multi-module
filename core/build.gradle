@@ -1,0 +1,65 @@
+plugins {
+    id "org.springframework.boot" version "2.2.0.RELEASE"
+    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id "io.franzbecker.gradle-lombok" version "1.14"
+    //id 'com.ewerk.gradle.plugins.auto-value' version '1.0.7'
+}
+
+ext {
+    queryDslVersion = '4.2.1'
+    lombokVersion = '1.18.10'
+}
+
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
+}
+
+group = "com.tistory.eclipse4j"
+version = "0.0.1-SNAPSHOT"
+
+dependencies {
+
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    annotationProcessor("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    compile("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok")
+
+    compile("com.querydsl:querydsl-core:${queryDslVersion}")
+    compile("com.querydsl:querydsl-jpa:${queryDslVersion}")
+    compile("com.querydsl:querydsl-apt:${queryDslVersion}")
+    annotationProcessor("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+}
+
+
+def querydslSrcDir = 'src/main/generated'
+
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslSrcDir
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+sourceSets {
+    main.java.srcDirs += [ querydslSrcDir ]
+}
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(querydslSrcDir)
+}
+clean.doLast {
+    file(querydslSrcDir).deleteDir()
+}
