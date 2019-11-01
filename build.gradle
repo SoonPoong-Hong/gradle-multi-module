@@ -28,14 +28,3 @@ subprojects {
     dependencies {
     }
 }
-
-project(':core') {
-    dependencies {
-    }
-}
-
-project(':api') {
-    dependencies {
-        compile project(':core')
-    }
-}

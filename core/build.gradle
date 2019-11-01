@@ -11,15 +11,18 @@ ext {
     lombokVersion = '1.18.10'
 }
 
+group = "com.tistory.eclipse4j"
+version = "0.0.1-SNAPSHOT"
+
 bootJar {
     enabled = false
+    archiveVersion = '0.0.1-SNAPSHOT'
+    archiveExtension = 'jar'
 }
+
 jar {
     enabled = true
 }
-
-group = "com.tistory.eclipse4j"
-version = "0.0.1-SNAPSHOT"
 
 dependencies {
 
